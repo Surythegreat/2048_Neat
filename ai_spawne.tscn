@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://b48fh1ekomxt1"]
+
+[ext_resource type="Script" uid="uid://c204p5k268aah" path="res://ai_spawne.gd" id="1_drs8x"]
+[ext_resource type="Script" uid="uid://b4oodky3ushwp" path="res://camera_2d.gd" id="2_7ttrk"]
+[ext_resource type="PackedScene" uid="uid://dwuptr3eos1kt" path="res://examples/plot_sint.tscn" id="3_l1r1d"]
+
+[node name="AISpawne" type="Node2D"]
+script = ExtResource("1_drs8x")
+dist = 673
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(3000, 3581)
+zoom = Vector2(0.16, 0.16)
+script = ExtResource("2_7ttrk")
+
+[node name="PlotSint" parent="Camera2D" instance=ExtResource("3_l1r1d")]
+offset_left = -2500.0
+offset_top = -2500.0
+offset_right = 2500.0
+offset_bottom = 2501.0
+
+[node name="Graph2D" parent="Camera2D/PlotSint" index="0"]
+z_index = 4096
+x_max = 100.0
+y_max = 16.0
+
+[editable path="Camera2D/PlotSint"]

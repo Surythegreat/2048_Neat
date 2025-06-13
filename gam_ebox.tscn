@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://bpipthfqiw70j"]
+
+[ext_resource type="Texture2D" uid="uid://strf6btg8gde" path="res://Tile.png" id="1_j0k0r"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_acaxb"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_j0k0r"]
+font_size = 316
+font_color = Color(0, 0, 0, 1)
+
+[node name="GAMEbox" type="Sprite2D"]
+material = SubResource("CanvasItemMaterial_acaxb")
+scale = Vector2(0.32, 0.32)
+texture = ExtResource("1_j0k0r")
+
+[node name="score" type="Label" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -258.0
+offset_right = -254.0
+offset_bottom = -255.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "2"
+label_settings = SubResource("LabelSettings_j0k0r")
+horizontal_alignment = 1
+vertical_alignment = 1

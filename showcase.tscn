@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://be5t5w08l6q3c"]
+
+[ext_resource type="PackedScene" uid="uid://bqcv8q5pgtsyj" path="res://main.tscn" id="1_ewnj5"]
+[ext_resource type="Script" uid="uid://c50gp3xh3udaf" path="res://showcase.gd" id="1_lou5n"]
+
+[node name="showcase" type="Node2D"]
+script = ExtResource("1_lou5n")
+
+[node name="main" parent="." instance=ExtResource("1_ewnj5")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(570, 314)
+offset = Vector2(2.155, 0)
