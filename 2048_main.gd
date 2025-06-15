@@ -11,105 +11,109 @@ const SIZE := 4
 const EMPTY := -1
 signal death
 
+var isdeath:bool=false
 
 var haschanged:bool=false
 var notchanged:int=0
 
 var grid : Array = []
 var boxes:Array
-#var NetworkClass = preload("res://NEAT_usability/standalone_scripts/standalone_neuralnet.gd")
-#var network = NetworkClass.new()
+var NetworkClass = preload("res://NEAT_usability/standalone_scripts/standalone_neuralnet.gd")
+var network = NetworkClass.new()
+@export var neuronName:String
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	init_grid()
 	generate()
-	#network.load_config("2048_a1")
+	network.load_config(neuronName)
 	
-#func step():
-	#var inp=[]
-	#for i in grid:
-		#for j in i:
-			#inp.append((j+1.0)/18.0)
-	#var network_output = network.update(inp)
-	#var maxednum=-1;
-	#var maxind=-1
-	#for i in range(4):
-		#if(network_output[i]>maxednum):
-			#maxednum=network_output[i]
-			#maxind=i
-	#if(maxind==0):
+func step():
+	if(isdeath):
+		return
+	var inp=[]
+	for i in grid:
+		for j in i:
+			inp.append((j+1.0)/18.0)
+	var network_output = network.update(inp)
+	var maxednum=-1;
+	var maxind=-1
+	for i in range(4):
+		if(network_output[i]>maxednum):
+			maxednum=network_output[i]
+			maxind=i
+	if(maxind==0):
+		Clear()
+		move_left()
+		generate()
+		if(!haschanged):
+			notchanged+=1
+		else:
+			notchanged=0
+		if(is_game_over() ||notchanged>=16):
+			death.emit()
+		haschanged=false
+	elif(maxind==1):
+		Clear()
+		move_right()
+		generate()
+		if(!haschanged):
+			notchanged+=1
+		else:
+			notchanged=0
+		if(is_game_over() ||notchanged>=16):
+			death.emit()
+		haschanged=false
+	elif(maxind==2):
+		Clear()
+		move_up()
+		generate()
+		if(!haschanged):
+			notchanged+=1
+		else:
+			notchanged=0
+		if(is_game_over() ||notchanged>=16):
+			death.emit()
+		haschanged=false
+	elif(maxind==3):
+		Clear()
+		move_down()
+		generate()
+		if(!haschanged):
+			notchanged+=1
+		else:
+			notchanged=0
+		if(is_game_over() ||notchanged>=16):
+			death.emit()
+		haschanged=false
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta: float) -> void:
+	#if(Input.is_action_just_pressed("ui_up")):
 		#Clear()
 		#move_left()
 		#generate()
-		#if(!haschanged):
-			#notchanged+=1
-		#else:
-			#notchanged=0
-		#if(is_game_over() ||notchanged>=16):
-			#death.emit()
-		#haschanged=false
-	#elif(maxind==1):
+		#if(is_game_over()):
+			#print("game over")
+	#elif(Input.is_action_just_pressed("ui_down")):
 		#Clear()
 		#move_right()
 		#generate()
-		#if(!haschanged):
-			#notchanged+=1
-		#else:
-			#notchanged=0
-		#if(is_game_over() ||notchanged>=16):
-			#death.emit()
-		#haschanged=false
-	#elif(maxind==2):
+		#if(is_game_over()):
+			#print("game over")
+	#elif(Input.is_action_just_pressed("ui_left")):
 		#Clear()
 		#move_up()
 		#generate()
-		#if(!haschanged):
-			#notchanged+=1
-		#else:
-			#notchanged=0
-		#if(is_game_over() ||notchanged>=16):
-			#death.emit()
-		#haschanged=false
-	#elif(maxind==3):
+		#if(is_game_over()):
+			#print("game over")
+	#elif(Input.is_action_just_pressed("ui_right")):
 		#Clear()
 		#move_down()
 		#generate()
-		#if(!haschanged):
-			#notchanged+=1
-		#else:
-			#notchanged=0
-		#if(is_game_over() ||notchanged>=16):
-			#death.emit()
-		#haschanged=false
-#
-#
-## Called every frame. 'delta' is the elapsed time since the previous frame.
-##func _process(delta: float) -> void:
-	##if(Input.is_action_just_pressed("ui_up")):
-		##Clear()
-		##move_left()
-		##generate()
-		##if(is_game_over()):
-			##print("game over")
-	##elif(Input.is_action_just_pressed("ui_down")):
-		##Clear()
-		##move_right()
-		##generate()
-		##if(is_game_over()):
-			##print("game over")
-	##elif(Input.is_action_just_pressed("ui_left")):
-		##Clear()
-		##move_up()
-		##generate()
-		##if(is_game_over()):
-			##print("game over")
-	##elif(Input.is_action_just_pressed("ui_right")):
-		##Clear()
-		##move_down()
-		##generate()
-		##if(is_game_over()):
-			##print("game over")
+		#if(is_game_over()):
+			#print("game over")
 
 func sense() -> Array:
 	var inp=[]
@@ -229,7 +233,7 @@ func add_random_tile():
 		return
 
 	var rand_pos = empty_cells[randi() % empty_cells.size()]
-	grid[rand_pos.x][rand_pos.y] = 2 if(randi() % 10 == 0) else  1  # 4 or 2 → log2(4)=2, log2(2)=1
+	grid[rand_pos.x][rand_pos.y] = 1  # 4 or 2 → log2(4)=2, log2(2)=1
 
 
 # Core logic: compress + merge
@@ -324,3 +328,5 @@ func move_down():
 
 func _on_death() -> void:
 	modulate=(Color(1,0,0))
+	print(neuronName)
+	isdeath=true
